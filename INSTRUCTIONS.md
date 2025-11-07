@@ -1,207 +1,234 @@
-# 🍰 SweetBalance - Instructions d'ouverture dans Visual Studio
+# 🍰 SweetBalance - Application WPF .NET Framework 4.7.2
 
-## 📋 Structure du projet WPF
+## ✅ C'EST UN VRAI PROJET WPF !
 
-Votre application **SweetBalance** est maintenant une véritable application WPF avec une structure complète :
+Ce projet est maintenant un **véritable projet WPF .NET Framework 4.7.2** avec le format de fichier .csproj traditionnel XML complet, exactement comme Visual Studio le crée.
+
+### 🎯 Caractéristiques du projet WPF
+
+- **Type de projet** : WPF Application (.NET Framework)
+- **Framework cible** : .NET Framework 4.7.2
+- **Format .csproj** : XML traditionnel (pas SDK-style)
+- **ProjectTypeGuids** : `{60dc8134-eba5-43b8-bcc9-bb4bc16c2548}` (GUID officiel WPF)
+
+## 📋 Structure du projet
 
 ```
-SweetBalance/
-├── SweetBalance.sln              ← Fichier solution à ouvrir dans Visual Studio
+repos/
+├── SweetBalance.sln              ← Fichier solution à ouvrir ✅
 │
-└── SweetBalance/                 ← Projet WPF
-    ├── SweetBalance.csproj       ← Fichier projet WPF
+└── SweetBalance/                 ← Projet WPF .NET Framework
+    ├── SweetBalance.csproj       ← Format XML WPF complet ✅
+    ├── App.config                ← Configuration .NET Framework ✅
     │
-    ├── App.xaml                  ← Point d'entrée de l'application
+    ├── App.xaml                  ← Point d'entrée WPF
     ├── App.xaml.cs
     │
-    ├── Properties/               ← Dossier Properties WPF ✅
-    │   ├── AssemblyInfo.cs       ← Métadonnées de l'assembly
-    │   ├── Resources.Designer.cs
-    │   ├── Resources.resx        ← Fichier de ressources
-    │   ├── Settings.Designer.cs
-    │   └── Settings.settings     ← Paramètres d'application
+    ├── Properties/               ← Propriétés WPF standard
+    │   ├── AssemblyInfo.cs
+    │   ├── Resources.resx
+    │   └── Settings.settings
     │
-    ├── Models/                   ← Modèles de données
-    │   ├── Stock.cs
-    │   ├── Recipe.cs
-    │   ├── Quote.cs
-    │   ├── Order.cs
-    │   └── Settings.cs
-    │
-    ├── ViewModels/               ← Logique métier MVVM
-    │   ├── Base/
-    │   │   └── ObservableObject.cs
-    │   ├── MainViewModel.cs
-    │   ├── StockViewModel.cs
-    │   └── ... (autres ViewModels)
-    │
-    ├── Views/                    ← Interfaces utilisateur XAML
-    │   ├── MainWindow.xaml
-    │   ├── MainWindow.xaml.cs
-    │   ├── StockView.xaml
-    │   └── ... (autres Views)
-    │
-    ├── Helpers/                  ← Classes utilitaires
-    │   └── RelayCommand.cs
-    │
-    └── Resources/                ← Ressources de style
-        └── Styles.xaml
+    ├── Models/                   ← 5 modèles métier
+    ├── ViewModels/               ← 8 ViewModels MVVM
+    ├── Views/                    ← 7 vues XAML
+    ├── Helpers/                  ← RelayCommand
+    └── Resources/                ← Styles XAML
 ```
 
-## 🚀 Comment ouvrir le projet dans Visual Studio 2022
+## 🚀 Ouvrir dans Visual Studio 2022
 
-### Option 1 : Ouvrir le fichier .sln
+### Méthode recommandée :
 
-1. Ouvrez **Visual Studio 2022**
-2. Cliquez sur **"Ouvrir un projet ou une solution"**
-3. Naviguez vers le dossier du repo et sélectionnez : `SweetBalance.sln`
-4. Cliquez sur **"Ouvrir"**
+1. Lancez **Visual Studio 2022**
+2. Menu **Fichier** → **Ouvrir** → **Projet/Solution**
+3. Naviguez vers le dossier et sélectionnez : **`SweetBalance.sln`**
+4. Cliquez sur **Ouvrir**
+5. Le projet WPF s'ouvre dans Visual Studio !
 
-### Option 2 : Ouvrir le dossier
+### Pour compiler et exécuter :
 
-1. Ouvrez **Visual Studio 2022**
-2. Cliquez sur **"Ouvrir un dossier"**
-3. Sélectionnez le dossier `SweetBalance/`
-4. Visual Studio détectera automatiquement le projet WPF
+- Appuyez sur **F5** (ou **Ctrl+F5** pour sans débogage)
+- Ou cliquez sur le bouton **▶️ Démarrer**
 
-## ▶️ Comment compiler et exécuter
+Visual Studio va automatiquement :
+- Restaurer les packages NuGet (si nécessaire)
+- Compiler le projet WPF
+- Lancer l'application Windows
 
-### Dans Visual Studio :
+## 🔍 Vérification du type de projet
 
-1. Appuyez sur **F5** ou cliquez sur le bouton **"Démarrer"** (▶️)
-2. Visual Studio va :
-   - Restaurer les packages NuGet automatiquement
-   - Compiler le projet
-   - Lancer l'application WPF
+Pour vérifier que c'est bien un projet WPF, ouvrez `SweetBalance.csproj` :
 
-### En ligne de commande :
+```xml
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
 
-Si vous avez le .NET 6 SDK installé :
+    <!-- GUID officiel pour les projets WPF -->
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
 
-```bash
-cd SweetBalance
-
-# Restaurer les packages
-dotnet restore
-
-# Compiler
-dotnet build
-
-# Exécuter
-dotnet run
+  <ItemGroup>
+    <!-- Références WPF obligatoires -->
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+</Project>
 ```
 
-## 🎯 Fonctionnalités actuelles
+## ✨ Fonctionnalités
 
-### ✅ Module Stocks (100% fonctionnel)
+### Module Stocks (100% fonctionnel)
 
-Le module de gestion des stocks est **entièrement implémenté** avec :
+- ✅ Interface WPF moderne
+- ✅ Gestion complète des ingrédients (CRUD)
+- ✅ Ajustement des quantités avec boutons +/-
+- ✅ Alertes visuelles pour stocks faibles
+- ✅ Calcul de valeur totale en temps réel
+- ✅ Formulaire modal avec validation
+- ✅ Design rose/violet avec dégradés
 
-- Ajout d'ingrédients avec formulaire
-- Modification d'ingrédients existants
-- Suppression avec confirmation
-- Boutons +/- pour ajuster les quantités
-- Alertes visuelles pour stocks faibles (affichage en rouge)
-- Calcul automatique de la valeur totale du stock
-- Validation des données (nom obligatoire, prix > 0)
+### Modules à développer
 
-### 🔧 Modules en développement
-
-Ces modules ont leur structure de base mais affichent "Module en cours de développement" :
-
-- **Recettes** : Catalogue de recettes avec calcul des coûts
-- **Devis** : Création et gestion de devis clients
-- **Commandes** : Suivi des commandes
-- **Production** : Planning de production
-- **Statistiques** : Analyse de l'activité
-- **Paramètres** : Configuration de l'application
+Structure MVVM prête pour :
+- Recettes
+- Devis
+- Commandes
+- Production
+- Statistiques
+- Paramètres
 
 ## 🏗️ Architecture MVVM
 
-Le projet suit strictement le pattern **Model-View-ViewModel** :
+```
+Models (Données)
+   ↓
+ViewModels (Logique + INotifyPropertyChanged)
+   ↓
+Views (XAML + Data Binding)
+```
 
-- **Models** : Classes de données pures (Stock, Recipe, etc.)
-- **ViewModels** : Logique métier + INotifyPropertyChanged
-- **Views** : XAML uniquement pour l'interface
-- **DataBinding** : Liaison bidirectionnelle entre View et ViewModel
+### Exemple de binding WPF :
 
-## 🎨 Technologies utilisées
+**XAML (View):**
+```xml
+<TextBox Text="{Binding CurrentStock.Nom, UpdateSourceTrigger=PropertyChanged}"/>
+<Button Command="{Binding SaveCommand}" Content="Enregistrer"/>
+```
 
-- **.NET 6.0** - Framework moderne
-- **WPF** (Windows Presentation Foundation)
-- **C# 10**
-- **XAML** - Markup pour l'interface
-- **MVVM** - Pattern d'architecture
+**C# (ViewModel):**
+```csharp
+public class StockViewModel : ObservableObject
+{
+    private Stock _currentStock;
+
+    public Stock CurrentStock
+    {
+        get => _currentStock;
+        set => SetProperty(ref _currentStock, value);
+    }
+
+    public ICommand SaveCommand { get; }
+}
+```
 
 ## 📦 Prérequis
 
-- **Windows 10** ou supérieur
+- **Windows 10/11**
 - **Visual Studio 2022** (Community, Professional ou Enterprise)
-  - Avec la charge de travail "Développement .NET Desktop"
-- **.NET 6.0 SDK** (inclus avec Visual Studio 2022)
+  - Avec la charge de travail **"Développement .NET Desktop"**
+- **.NET Framework 4.7.2 Developer Pack**
+  - Inclus avec Visual Studio 2022
 
-## ✨ Points clés du code
+## 🎯 Technologies
 
-### Navigation entre modules
+| Technologie | Version | Usage |
+|-------------|---------|-------|
+| WPF | .NET Framework 4.7.2 | Interface utilisateur |
+| C# | 7.3+ | Langage de programmation |
+| XAML | - | Markup pour l'UI |
+| MVVM | - | Pattern d'architecture |
 
-La navigation est gérée par le `MainViewModel` qui expose des commandes :
+## 🔧 Compilation en ligne de commande
 
-```csharp
-NavigateToStocksCommand
-NavigateToRecipesCommand
-NavigateToQuotesCommand
-// etc.
+Si vous avez MSBuild :
+
+```cmd
+cd SweetBalance
+
+REM Restaurer les packages NuGet
+nuget restore
+
+REM Compiler
+msbuild SweetBalance.csproj /p:Configuration=Release
+
+REM Exécuter
+bin\Release\SweetBalance.exe
 ```
 
-### Liaison des données (Data Binding)
+## 📝 Points importants
 
-Toutes les vues utilisent le DataBinding XAML :
+### C'est bien un projet WPF parce que :
 
-```xaml
-<TextBox Text="{Binding CurrentStock.Nom, UpdateSourceTrigger=PropertyChanged}"/>
-<Button Command="{Binding SaveCommand}"/>
-```
+1. ✅ **ProjectTypeGuids** contient `{60dc8134-eba5-43b8-bcc9-bb4bc16c2548}` (GUID WPF)
+2. ✅ **Références WPF** : System.Xaml, WindowsBase, PresentationCore, PresentationFramework
+3. ✅ **OutputType** : WinExe (application Windows)
+4. ✅ **Format .csproj** : XML complet traditionnel
+5. ✅ **App.xaml** : Point d'entrée WPF
+6. ✅ **App.config** : Configuration .NET Framework
+7. ✅ **Fichiers XAML** : Interfaces utilisateur WPF
 
-### Notifications de changement
+### Différence avec un projet C# console :
 
-Les ViewModels héritent de `ObservableObject` qui implémente `INotifyPropertyChanged` :
+| Projet WPF | Projet Console C# |
+|-----------|------------------|
+| ProjectTypeGuids WPF | Pas de ProjectTypeGuids |
+| Références WPF | Pas de références WPF |
+| App.xaml | Program.cs |
+| OutputType: WinExe | OutputType: Exe |
+| Interface graphique XAML | Interface console texte |
 
-```csharp
-public decimal ValeurTotale
-{
-    get { ... }
-}
+## 🐛 Dépannage
 
-OnPropertyChanged(nameof(ValeurTotale));
-```
+### Erreur "Type de projet non supporté"
 
-## 🐛 Résolution de problèmes
+→ Installez la charge de travail "Développement .NET Desktop" dans Visual Studio
 
-### Le projet ne compile pas
+### Erreur ".NET Framework 4.7.2 non trouvé"
 
-1. Vérifiez que vous avez **.NET 6 SDK** installé
-2. Dans Visual Studio : clic droit sur la solution → **"Restaurer les packages NuGet"**
-3. Menu **Générer** → **"Regénérer la solution"**
+→ Installez le .NET Framework 4.7.2 Developer Pack depuis le Visual Studio Installer
 
-### L'application ne démarre pas
+### Erreur de compilation XAML
 
-1. Vérifiez que le projet de démarrage est bien **SweetBalance**
-2. Clic droit sur le projet → **"Définir comme projet de démarrage"**
-
-### Erreur de namespace
-
-Si vous renommez le projet :
-1. Mettez à jour tous les namespaces dans les fichiers .cs
-2. Mettez à jour les déclarations `xmlns:local` dans les fichiers .xaml
+→ Vérifiez que les fichiers .xaml ont bien la propriété "Build Action: Page"
 
 ## 📚 Ressources
 
-- [Documentation WPF Microsoft](https://docs.microsoft.com/fr-fr/dotnet/desktop/wpf/)
+- [Documentation WPF officielle Microsoft](https://docs.microsoft.com/fr-fr/dotnet/desktop/wpf/)
 - [Pattern MVVM](https://docs.microsoft.com/fr-fr/dotnet/architecture/maui/mvvm)
-- [.NET 6 Documentation](https://docs.microsoft.com/fr-fr/dotnet/core/whats-new/dotnet-6)
+- [.NET Framework 4.7.2](https://dotnet.microsoft.com/download/dotnet-framework/net472)
 
 ---
 
-**Note** : Ce projet a été converti depuis une application React vers WPF en conservant la même architecture modulaire et les mêmes fonctionnalités.
+## ✅ Checklist de vérification
+
+Votre projet est un vrai projet WPF si :
+
+- [x] Le fichier .csproj contient `ProjectTypeGuids` avec le GUID WPF
+- [x] Il y a des références à `PresentationFramework`, `PresentationCore`, `WindowsBase`
+- [x] Il y a un fichier `App.xaml` avec `Application` comme élément racine
+- [x] Il y a un fichier `App.config` pour .NET Framework
+- [x] Les fichiers `.xaml` utilisent des contrôles WPF (Window, UserControl, etc.)
+- [x] Le projet s'ouvre correctement dans Visual Studio comme "Application WPF"
+
+**Toutes ces conditions sont remplies ✅**
+
+---
+
+**Note** : Ce projet a été converti depuis React vers WPF .NET Framework en conservant l'architecture MVVM et les fonctionnalités.
 
 **Bon développement ! 🚀**
