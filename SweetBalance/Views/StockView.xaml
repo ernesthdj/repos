@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helpers="clr-namespace:SweetBalance.Helpers"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="1000">
 
@@ -13,13 +14,14 @@
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+            <helpers:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid>
             <!-- Vue Liste des Stocks -->
-            <Border Style="{StaticResource Card}" Visibility="{Binding ShowForm, Converter={StaticResource BoolToVis}, ConverterParameter=Inverse}">
+            <Border Style="{StaticResource Card}" Visibility="{Binding ShowForm, Converter={StaticResource InverseBoolToVis}}">
                 <StackPanel>
                     <!-- Header -->
                     <Grid Margin="0,0,0,20">
@@ -54,13 +56,13 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Foreground="#7F1D1D" FontSize="12" Margin="0,2">
-                                            <Run Text="{Binding Nom}"/>
+                                            <Run Text="{Binding Nom, Mode=OneWay}"/>
                                             <Run Text=": "/>
-                                            <Run Text="{Binding StockActuel}"/>
+                                            <Run Text="{Binding StockActuel, Mode=OneWay}"/>
                                             <Run Text=" "/>
-                                            <Run Text="{Binding Unite}"/>
+                                            <Run Text="{Binding Unite, Mode=OneWay}"/>
                                             <Run Text=" (min: "/>
-                                            <Run Text="{Binding StockMin}"/>
+                                            <Run Text="{Binding StockMin, Mode=OneWay}"/>
                                             <Run Text=")"/>
                                         </TextBlock>
                                     </DataTemplate>
@@ -140,13 +142,13 @@
                                             </StackPanel>
                                             <TextBlock Foreground="#6B7280" FontSize="12">
                                                 <Run Text="Prix: "/>
-                                                <Run Text="{Binding PrixUnitaire, StringFormat='{}{0:F2}'}"/>
+                                                <Run Text="{Binding PrixUnitaire, StringFormat='{}{0:F2}', Mode=OneWay}"/>
                                                 <Run Text="€/"/>
-                                                <Run Text="{Binding Unite}"/>
+                                                <Run Text="{Binding Unite, Mode=OneWay}"/>
                                                 <Run Text=" • Stock min: "/>
-                                                <Run Text="{Binding StockMin}"/>
+                                                <Run Text="{Binding StockMin, Mode=OneWay}"/>
                                                 <Run Text=" • Valeur: "/>
-                                                <Run Text="{Binding ValeurTotale, StringFormat='{}{0:F2}'}"/>
+                                                <Run Text="{Binding ValeurTotale, StringFormat='{}{0:F2}', Mode=OneWay}"/>
                                                 <Run Text="€"/>
                                             </TextBlock>
                                         </StackPanel>
@@ -178,12 +180,12 @@
                                                 </Button>
 
                                                 <StackPanel Margin="10,0" MinWidth="60">
-                                                    <TextBlock Text="{Binding StockActuel}"
+                                                    <TextBlock Text="{Binding StockActuel, Mode=OneWay}"
                                                                FontSize="20"
                                                                FontWeight="Bold"
                                                                Foreground="#A855F7"
                                                                HorizontalAlignment="Center"/>
-                                                    <TextBlock Text="{Binding Unite}"
+                                                    <TextBlock Text="{Binding Unite, Mode=OneWay}"
                                                                FontSize="10"
                                                                Foreground="#9CA3AF"
                                                                HorizontalAlignment="Center"/>
@@ -261,20 +263,24 @@
             </Border>
 
             <!-- Formulaire d'ajout/édition -->
-            <Border Style="{StaticResource Card}">
-                <Border.Visibility>
-                    <Binding Path="ShowForm" Converter="{StaticResource BoolToVis}"/>
-                </Border.Visibility>
-
+            <Border Style="{StaticResource Card}" Visibility="{Binding ShowForm, Converter={StaticResource BoolToVis}}">
                 <StackPanel>
                     <!-- Header du formulaire -->
                     <Grid Margin="0,0,0,25">
-                        <TextBlock FontSize="24" FontWeight="Bold" Foreground="#A855F7" VerticalAlignment="Center">
-                            <Run Text="{Binding IsEditing, Converter={StaticResource BoolToVis}}"/>
-                            <Run Text="✏️ Modifier" />
-                            <Run Text="➕ Nouvel" />
-                            <Run Text=" ingrédient"/>
-                        </TextBlock>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock FontSize="24" FontWeight="Bold" Foreground="#A855F7">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="➕ Nouvel ingrédient"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                <Setter Property="Text" Value="✏️ Modifier l'ingrédient"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
                         <Button Content="← Retour"
                                 Command="{Binding CancelCommand}"
                                 Background="Transparent"
@@ -356,11 +362,16 @@
                                 Command="{Binding SaveCommand}"
                                 Style="{StaticResource PrimaryButton}"
                                 Height="45">
-                            <TextBlock>
-                                <Run Text="{Binding IsEditing, Converter={StaticResource BoolToVis}}"/>
-                                <Run Text="Mettre à jour"/>
-                                <Run Text="Ajouter"/>
-                            </TextBlock>
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+                                    <Setter Property="Content" Value="Ajouter"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                            <Setter Property="Content" Value="Mettre à jour"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
                         </Button>
                     </Grid>
                 </StackPanel>
