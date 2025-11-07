@@ -1,0 +1,275 @@
+<Window x:Class="SweetBalance.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SweetBalance.Views"
+        xmlns:vm="clr-namespace:SweetBalance.ViewModels"
+        mc:Ignorable="d"
+        Title="SweetBalance" Height="800" Width="1400"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- DataTemplates pour chaque View -->
+            <DataTemplate DataType="{x:Type vm:StockViewModel}">
+                <local:StockView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:RecipeViewModel}">
+                <local:RecipeView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:QuoteViewModel}">
+                <local:QuoteView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:OrderViewModel}">
+                <local:OrderView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:ProductionViewModel}">
+                <local:ProductionView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:StatisticsViewModel}">
+                <local:StatisticsView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+                <local:SettingsView/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="White" BorderBrush="#FBCFE8" BorderThickness="0,0,0,2">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" BlurRadius="5" Opacity="0.1"/>
+            </Border.Effect>
+            <StackPanel Margin="30,20">
+                <TextBlock FontSize="28" FontWeight="Bold" Foreground="#A855F7">
+                    <Run Text="🍰 "/>
+                    <Run Text="{Binding Settings.NomActivite}"/>
+                </TextBlock>
+                <TextBlock Text="Gestion intelligente de pâtisserie"
+                           FontSize="12"
+                           Foreground="#6B7280"
+                           Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Content Area -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Sidebar Navigation -->
+            <Border Grid.Column="0" Background="White">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="10" Opacity="0.1"/>
+                </Border.Effect>
+                <StackPanel Margin="15">
+                    <Button Command="{Binding NavigateToStatisticsCommand}"
+                            Margin="0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavigationButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentViewModel}"
+                                                 Value="{x:Type vm:StatisticsViewModel}">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#EC4899" Offset="0"/>
+                                                    <GradientStop Color="#A855F7" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📊" FontSize="16" Margin="0,0,10,0"/>
+                            <TextBlock Text="Statistiques" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding NavigateToSettingsCommand}"
+                            Margin="0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavigationButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentViewModel}"
+                                                 Value="{x:Type vm:SettingsViewModel}">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#EC4899" Offset="0"/>
+                                                    <GradientStop Color="#A855F7" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⚙️" FontSize="16" Margin="0,0,10,0"/>
+                            <TextBlock Text="Paramètres" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding NavigateToRecipesCommand}"
+                            Margin="0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavigationButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentViewModel}"
+                                                 Value="{x:Type vm:RecipeViewModel}">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#EC4899" Offset="0"/>
+                                                    <GradientStop Color="#A855F7" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📖" FontSize="16" Margin="0,0,10,0"/>
+                            <TextBlock Text="Recettes" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding NavigateToQuotesCommand}"
+                            Margin="0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavigationButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentViewModel}"
+                                                 Value="{x:Type vm:QuoteViewModel}">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#EC4899" Offset="0"/>
+                                                    <GradientStop Color="#A855F7" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📄" FontSize="16" Margin="0,0,10,0"/>
+                            <TextBlock Text="Devis" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding NavigateToOrdersCommand}"
+                            Margin="0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavigationButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentViewModel}"
+                                                 Value="{x:Type vm:OrderViewModel}">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#EC4899" Offset="0"/>
+                                                    <GradientStop Color="#A855F7" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📅" FontSize="16" Margin="0,0,10,0"/>
+                            <TextBlock Text="Commandes" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding NavigateToProductionCommand}"
+                            Margin="0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavigationButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentViewModel}"
+                                                 Value="{x:Type vm:ProductionViewModel}">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#EC4899" Offset="0"/>
+                                                    <GradientStop Color="#A855F7" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="✅" FontSize="16" Margin="0,0,10,0"/>
+                            <TextBlock Text="Production" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding NavigateToStocksCommand}"
+                            Margin="0,5">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource NavigationButton}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentViewModel}"
+                                                 Value="{x:Type vm:StockViewModel}">
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                    <GradientStop Color="#EC4899" Offset="0"/>
+                                                    <GradientStop Color="#A855F7" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📦" FontSize="16" Margin="0,0,10,0"/>
+                            <TextBlock Text="Stocks" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Main Content Area -->
+            <Border Grid.Column="1">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#FDF2F8" Offset="0"/>
+                        <GradientStop Color="#FAF5FF" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <ContentControl Content="{Binding CurrentViewModel}" Margin="25"/>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

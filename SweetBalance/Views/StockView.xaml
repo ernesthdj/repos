@@ -1,0 +1,370 @@
+<UserControl x:Class="SweetBalance.Views.StockView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <!-- Vue Liste des Stocks -->
+            <Border Style="{StaticResource Card}" Visibility="{Binding ShowForm, Converter={StaticResource BoolToVis}, ConverterParameter=Inverse}">
+                <StackPanel>
+                    <!-- Header -->
+                    <Grid Margin="0,0,0,20">
+                        <TextBlock Text="📦 Gestion des stocks"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="#A855F7"
+                                   VerticalAlignment="Center"/>
+                        <Button Content="➕ Nouvel ingrédient"
+                                Command="{Binding AddNewCommand}"
+                                Style="{StaticResource PrimaryButton}"
+                                HorizontalAlignment="Right"/>
+                    </Grid>
+
+                    <!-- Alerte stocks faibles -->
+                    <Border Background="#FEE2E2"
+                            BorderBrush="#DC2626"
+                            BorderThickness="0,0,0,4"
+                            CornerRadius="8"
+                            Padding="15"
+                            Margin="0,0,0,20"
+                            Visibility="{Binding HasStocksFaibles, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="⚠️" FontSize="20" Margin="0,0,10,0"/>
+                                <TextBlock FontWeight="SemiBold" Foreground="#991B1B">
+                                    <Run Text="{Binding StocksFaibles.Count, Mode=OneWay}"/>
+                                    <Run Text="ingrédient(s) à réapprovisionner"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <ItemsControl ItemsSource="{Binding StocksFaibles}" Margin="30,0,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Foreground="#7F1D1D" FontSize="12" Margin="0,2">
+                                            <Run Text="{Binding Nom}"/>
+                                            <Run Text=": "/>
+                                            <Run Text="{Binding StockActuel}"/>
+                                            <Run Text=" "/>
+                                            <Run Text="{Binding Unite}"/>
+                                            <Run Text=" (min: "/>
+                                            <Run Text="{Binding StockMin}"/>
+                                            <Run Text=")"/>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Valeur totale -->
+                    <Border Margin="0,0,0,20" CornerRadius="12" Padding="20">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#FAF5FF" Offset="0"/>
+                                <GradientStop Color="#FDF2F8" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border BorderBrush="#E9D5FF" BorderThickness="2" CornerRadius="10">
+                            <StackPanel>
+                                <TextBlock Text="Valeur totale du stock"
+                                           Foreground="#6B7280"
+                                           FontSize="12"
+                                           Margin="0,0,0,5"/>
+                                <TextBlock FontSize="36"
+                                           FontWeight="Bold"
+                                           Foreground="#A855F7">
+                                    <Run Text="{Binding ValeurTotale, StringFormat='{}{0:F2}', Mode=OneWay}"/>
+                                    <Run Text="€"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </Border>
+
+                    <!-- Liste des stocks -->
+                    <ItemsControl ItemsSource="{Binding Stocks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,0,0,15"
+                                        CornerRadius="10"
+                                        Padding="15"
+                                        BorderThickness="2">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                                            <Setter Property="Background" Value="White"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding EstFaible}" Value="True">
+                                                    <Setter Property="BorderBrush" Value="#FCA5A5"/>
+                                                    <Setter Property="Background" Value="#FEF2F2"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Infos produit -->
+                                        <StackPanel Grid.Column="0">
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="{Binding Nom}"
+                                                           FontSize="16"
+                                                           FontWeight="Bold"
+                                                           VerticalAlignment="Center"/>
+                                                <Border Background="#FEE2E2"
+                                                        CornerRadius="12"
+                                                        Padding="8,4"
+                                                        Margin="10,0,0,0"
+                                                        Visibility="{Binding EstFaible, Converter={StaticResource BoolToVis}}">
+                                                    <TextBlock Text="Stock faible !"
+                                                               Foreground="#991B1B"
+                                                               FontSize="10"
+                                                               FontWeight="Medium"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock Foreground="#6B7280" FontSize="12">
+                                                <Run Text="Prix: "/>
+                                                <Run Text="{Binding PrixUnitaire, StringFormat='{}{0:F2}'}"/>
+                                                <Run Text="€/"/>
+                                                <Run Text="{Binding Unite}"/>
+                                                <Run Text=" • Stock min: "/>
+                                                <Run Text="{Binding StockMin}"/>
+                                                <Run Text=" • Valeur: "/>
+                                                <Run Text="{Binding ValeurTotale, StringFormat='{}{0:F2}'}"/>
+                                                <Run Text="€"/>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <!-- Actions -->
+                                        <StackPanel Grid.Column="1"
+                                                    Orientation="Horizontal"
+                                                    VerticalAlignment="Center">
+                                            <!-- Contrôle stock -->
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
+                                                <Button Content="-"
+                                                        Command="{Binding DataContext.DecreaseStockCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Width="32" Height="32"
+                                                        Background="#EF4444"
+                                                        Foreground="White"
+                                                        FontWeight="Bold"
+                                                        BorderThickness="0"
+                                                        Cursor="Hand">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border Background="{TemplateBinding Background}"
+                                                                    CornerRadius="8">
+                                                                <ContentPresenter HorizontalAlignment="Center"
+                                                                                  VerticalAlignment="Center"/>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+
+                                                <StackPanel Margin="10,0" MinWidth="60">
+                                                    <TextBlock Text="{Binding StockActuel}"
+                                                               FontSize="20"
+                                                               FontWeight="Bold"
+                                                               Foreground="#A855F7"
+                                                               HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding Unite}"
+                                                               FontSize="10"
+                                                               Foreground="#9CA3AF"
+                                                               HorizontalAlignment="Center"/>
+                                                </StackPanel>
+
+                                                <Button Content="+"
+                                                        Command="{Binding DataContext.IncreaseStockCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Width="32" Height="32"
+                                                        Background="#10B981"
+                                                        Foreground="White"
+                                                        FontWeight="Bold"
+                                                        BorderThickness="0"
+                                                        Cursor="Hand">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border Background="{TemplateBinding Background}"
+                                                                    CornerRadius="8">
+                                                                <ContentPresenter HorizontalAlignment="Center"
+                                                                                  VerticalAlignment="Center"/>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </StackPanel>
+
+                                            <!-- Boutons Modifier/Supprimer -->
+                                            <Button Content="Modifier"
+                                                    Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="#3B82F6"
+                                                    Foreground="White"
+                                                    Padding="15,8"
+                                                    Margin="0,0,10,0"
+                                                    BorderThickness="0"
+                                                    Cursor="Hand">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                CornerRadius="8"
+                                                                Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter HorizontalAlignment="Center"
+                                                                              VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+
+                                            <Button Content="🗑️"
+                                                    Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Background="#EF4444"
+                                                    Foreground="White"
+                                                    Width="40" Height="40"
+                                                    FontSize="16"
+                                                    BorderThickness="0"
+                                                    Cursor="Hand">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                                CornerRadius="8">
+                                                            <ContentPresenter HorizontalAlignment="Center"
+                                                                              VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Formulaire d'ajout/édition -->
+            <Border Style="{StaticResource Card}">
+                <Border.Visibility>
+                    <Binding Path="ShowForm" Converter="{StaticResource BoolToVis}"/>
+                </Border.Visibility>
+
+                <StackPanel>
+                    <!-- Header du formulaire -->
+                    <Grid Margin="0,0,0,25">
+                        <TextBlock FontSize="24" FontWeight="Bold" Foreground="#A855F7" VerticalAlignment="Center">
+                            <Run Text="{Binding IsEditing, Converter={StaticResource BoolToVis}}"/>
+                            <Run Text="✏️ Modifier" />
+                            <Run Text="➕ Nouvel" />
+                            <Run Text=" ingrédient"/>
+                        </TextBlock>
+                        <Button Content="← Retour"
+                                Command="{Binding CancelCommand}"
+                                Background="Transparent"
+                                Foreground="#6B7280"
+                                BorderThickness="0"
+                                FontSize="14"
+                                Cursor="Hand"
+                                HorizontalAlignment="Right"/>
+                    </Grid>
+
+                    <!-- Champs du formulaire -->
+                    <StackPanel>
+                        <Label Content="Nom de l'ingrédient *" FontWeight="Medium" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding CurrentStock.Nom, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource ModernTextBox}"
+                                 Margin="0,0,0,15"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <Label Content="Prix unitaire (€) *" FontWeight="Medium" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding CurrentStock.PrixUnitaire, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <Label Content="Unité" FontWeight="Medium" Margin="0,0,0,5"/>
+                                <ComboBox SelectedValue="{Binding CurrentStock.Unite}"
+                                          Style="{StaticResource ModernComboBox}">
+                                    <ComboBoxItem Content="kg" IsSelected="True"/>
+                                    <ComboBoxItem Content="litre"/>
+                                    <ComboBoxItem Content="pièce"/>
+                                    <ComboBoxItem Content="g"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,15,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <Label Content="Stock actuel" FontWeight="Medium" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding CurrentStock.StockActuel, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <Label Content="Stock minimum" FontWeight="Medium" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding CurrentStock.StockMin, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Boutons d'action -->
+                    <Grid Margin="0,25,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0"
+                                Content="Annuler"
+                                Command="{Binding CancelCommand}"
+                                Style="{StaticResource SecondaryButton}"
+                                Height="45"/>
+
+                        <Button Grid.Column="2"
+                                Command="{Binding SaveCommand}"
+                                Style="{StaticResource PrimaryButton}"
+                                Height="45">
+                            <TextBlock>
+                                <Run Text="{Binding IsEditing, Converter={StaticResource BoolToVis}}"/>
+                                <Run Text="Mettre à jour"/>
+                                <Run Text="Ajouter"/>
+                            </TextBlock>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
